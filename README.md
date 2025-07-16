@@ -2,6 +2,13 @@
 
 This is a Spring Boot application for managing invoices and products, generating PDF invoices, and emailing them to customers. It uses PostgreSQL for data storage and integrates with Gmail SMTP for sending emails.
 
+👉 You can test the API using **Postman**, or check out the **frontend dashboard** built with Next.js:
+- 🔗 GitHub (Frontend): [https://github.com/badrinarayanms/invoiceer-frontend](https://github.com/badrinarayanms/invoiceer-frontend)
+- 🌐 Live Demo: [https://invoiceer-frontend.vercel.app](https://invoiceer-frontend.vercel.app)
+- 🚀 Deployed Backend: [https://invoiceer-o31i.onrender.com](https://invoiceer-o31i.onrender.com)
+
+---
+
 ## Features
 
 - Product CRUD operations
