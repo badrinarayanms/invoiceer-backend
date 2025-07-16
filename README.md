@@ -17,6 +17,36 @@ This is a Spring Boot application for managing invoices and products, generating
 - Emailing invoices as PDF attachments
 - RESTful API with CORS support for frontend integration
 
+---
+
+## API Endpoints
+
+### 🔹 Products
+
+| Method | Endpoint             | Description                         |
+|--------|----------------------|-------------------------------------|
+| GET    | `/products`          | Get all products                    |
+| GET    | `/products/{id}`     | Get a specific product by ID        |
+| POST   | `/products`          | Add a new product                   |
+| PUT    | `/products/{id}`     | Update a product by ID              |
+| DELETE | `/products/{id}`     | Delete a product by ID              |
+
+> ⚠️ Deleting a product that's used in invoices will return a `409 Conflict` error to prevent data loss.
+
+---
+
+### 🔹 Invoices
+
+| Method | Endpoint             | Description                            |
+|--------|----------------------|----------------------------------------|
+| GET    | `/invoices`          | Get all invoices                       |
+| GET    | `/invoices/{id}`     | Get a specific invoice by ID           |
+| POST   | `/invoice`           | Create an invoice with line items. PDF is generated and emailed to customer |
+
+> ✅ While creating an invoice, you must pass an array of items containing the product ID and quantity.
+
+---
+
 ## Technologies Used
 
 - Spring Boot
@@ -25,6 +55,8 @@ This is a Spring Boot application for managing invoices and products, generating
 - PostgreSQL
 - iText 7 (PDF generation)
 - Lombok
+
+---
 
 ## Getting Started
 
