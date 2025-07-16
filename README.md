@@ -6,8 +6,7 @@ This is a Spring Boot application for managing invoices and products, generating
 - 🔗 GitHub (Frontend): [https://github.com/badrinarayanms/invoiceer-frontend](https://github.com/badrinarayanms/invoiceer-frontend)
 - 🌐 Live Demo: [https://invoiceer-frontend.vercel.app](https://invoiceer-frontend.vercel.app)
 - 🚀 Deployed Backend: [https://invoiceer-o31i.onrender.com](https://invoiceer-o31i.onrender.com)
-  ---
-
+  
 ## 🚀 Deployment
 
 The backend was:
