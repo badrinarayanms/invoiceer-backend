@@ -34,6 +34,15 @@ This is a Spring Boot application for managing invoices and products, generating
 > ⚠️ Deleting a product that's used in invoices will return a `409 Conflict` error to prevent data loss.
 
 ---
+## 📥 JSON Format for `POST` or `PUT /products`
+
+
+<pre> <code>json
+{
+  "name": "Wireless Mouse",
+  "price": 1299.99
+}
+</code> </pre>
 
 ### 🔹 Invoices
 
@@ -46,6 +55,26 @@ This is a Spring Boot application for managing invoices and products, generating
 > ✅ While creating an invoice, you must pass an array of items containing the product ID and quantity.
 
 ---
+## 📥 JSON Format for JSON Format for `POST /invoice`
+
+
+<pre> <code>json
+{
+  "customerName": "John Doe",
+  "customerEmail": "john@example.com",
+  "items": [
+    {
+      "product": { "id": 1 },
+      "quantity": 2
+    },
+    {
+      "product": { "id": 3 },
+      "quantity": 1
+    }
+  ]
+}
+
+</code> </pre>
 
 ## Technologies Used
 
