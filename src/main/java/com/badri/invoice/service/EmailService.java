@@ -1,51 +1,48 @@
 package com.badri.invoice.service;
 
-import com.resend.Resend;
-import com.resend.services.emails.model.*;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-
-import java.util.Base64;
 
 @Service
 public class EmailService {
 
     @Autowired
-    private Resend resend;
+    private JavaMailSender mailSender;
 
-    public void sendInvoice(String toEmail, byte[] pdfBytes) {
+    public void sendInvoice(String toEmail, byte[] pdfBytes)
+            throws MessagingException {
 
-        try {
+        MimeMessage message =
+                mailSender.createMimeMessage();
 
-            String base64Pdf =
-                    Base64.getEncoder().encodeToString(pdfBytes);
+        MimeMessageHelper helper =
+                new MimeMessageHelper(message, true);
 
-            Attachment attachment = Attachment.builder()
-                    .fileName("invoice.pdf")
-                    .content(base64Pdf)
-                    .build();
+        //  Brevo sender email
+        helper.setFrom("badrinarayan.moola@gmail.com");
 
-            CreateEmailOptions params =
-                    CreateEmailOptions.builder()
-                            .from("onboarding@resend.dev")
-                            .to(toEmail)
-                            .subject("Your Invoice")
-                            .html(
-                                    "<h2>Your Invoice</h2>" +
-                                            "<p>Please find your invoice attached.</p>"
-                            )
-                            .attachments(attachment)
-                            .build();
+        // Customer email
+        helper.setTo(toEmail);
 
-            resend.emails().send(params);
+        helper.setSubject("Your Invoice");
 
-            System.out.println("Invoice email sent");
+        helper.setText(
+                "Please find your invoice attached.",
+                true
+        );
 
-        } catch (Exception e) {
-            System.out.println(
-                    "Email failed: " + e.getMessage()
-            );
-            throw new RuntimeException(e);
-        }
+        helper.addAttachment(
+                "invoice.pdf",
+                new ByteArrayResource(pdfBytes)
+        );
+
+        mailSender.send(message);
+
+        System.out.println("Invoice email sent");
     }
 }
