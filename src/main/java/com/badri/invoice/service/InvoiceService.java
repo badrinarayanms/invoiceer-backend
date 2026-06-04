@@ -1,9 +1,6 @@
 package com.badri.invoice.service;
 
-import com.badri.invoice.model.Invoice;
-import com.badri.invoice.model.InvoiceItem;
-import com.badri.invoice.model.PdfGenerator;
-import com.badri.invoice.model.Product;
+import com.badri.invoice.model.*;
 import com.badri.invoice.repository.InvoiceItemRepository;
 import com.badri.invoice.repository.InvoiceRepository;
 import com.badri.invoice.repository.ProductRepository;
@@ -30,28 +27,66 @@ public class InvoiceService {
 
     @Autowired
     private PdfGenerator pdfGenerator;
+
+    @Autowired
+    AuthUserService authUserService;
     public List<Invoice> getAllInvoices() {
-        return invRepo.findAll();
+        User user = authUserService.getCurrentUser();
+        return invRepo.findByOwner(user);
+
     }
 
     public Invoice getInvoiceById(Long id) {
-        return invRepo.findById(id).orElseThrow(() -> new RuntimeException("Invoice not found with id: " + id));
+//        return invRepo.findById(id).orElseThrow(() -> new RuntimeException("Invoice not found with id: " + id));
+        User user = authUserService.getCurrentUser();
+        return invRepo.findByIdAndOwner(id, user)
+                .orElseThrow(() -> new RuntimeException("Invoice not found"));
     }
 
     public void createInvoice(Invoice invoice) throws Exception {
+//        invoice.setInvoiceDate(LocalDateTime.now());
+//
+//        double totalAmount = 0;
+//
+//        for (InvoiceItem item : invoice.getItems()) {
+//            // Fetch the complete product from DB
+//            Long productId = item.getProduct().getId();
+//            Product fullProduct = productRepo.findById(productId)
+//                    .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
+//
+//            item.setProduct(fullProduct);
+//            item.setInvoice(invoice);
+//            item.setPriceAtTime(fullProduct.getPrice());
+//
+//            totalAmount += item.getQuantity() * item.getPriceAtTime();
+//        }
+//
+//        invoice.setTotalAmount(totalAmount);
+//
+//        Invoice savedInvoice = invRepo.save(invoice);
+//
+//        byte[] pdfBytes = pdfGenerator.generateInvoicePdf(savedInvoice);
+//        emailService.sendInvoice(invoice.getCustomerEmail(), pdfBytes);
+
+        User user = authUserService.getCurrentUser();
+        invoice.setOwner(user);
         invoice.setInvoiceDate(LocalDateTime.now());
 
         double totalAmount = 0;
 
         for (InvoiceItem item : invoice.getItems()) {
-            // Fetch the complete product from DB
-            Long productId = item.getProduct().getId();
-            Product fullProduct = productRepo.findById(productId)
-                    .orElseThrow(() -> new RuntimeException("Product not found with ID: " + productId));
 
-            item.setProduct(fullProduct);
+            Long productId = item.getProduct().getId();
+
+            // 🔐 Product must belong to same user
+            Product product = productRepo
+                    .findByIdAndOwner(productId, user)
+                    .orElseThrow(() ->
+                            new RuntimeException("Unauthorized product access"));
+
+            item.setProduct(product);
             item.setInvoice(invoice);
-            item.setPriceAtTime(fullProduct.getPrice());
+            item.setPriceAtTime(product.getPrice());
 
             totalAmount += item.getQuantity() * item.getPriceAtTime();
         }
@@ -61,7 +96,7 @@ public class InvoiceService {
         Invoice savedInvoice = invRepo.save(invoice);
 
         byte[] pdfBytes = pdfGenerator.generateInvoicePdf(savedInvoice);
-        emailService.sendInvoice(invoice.getCustomerEmail(), pdfBytes);
+        emailService.sendInvoice(savedInvoice.getCustomerEmail(), pdfBytes);
     }
 
 

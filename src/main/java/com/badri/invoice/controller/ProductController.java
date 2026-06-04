@@ -25,6 +25,7 @@ public class ProductController {
     @GetMapping("/products/{id}")
     public ResponseEntity<Product> getProduct(@PathVariable Long id) {
         Product product = productService.getProductById(id);
+
         return product != null ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
     }
 
@@ -40,16 +41,9 @@ public class ProductController {
         return product != null ? ResponseEntity.ok(product) : ResponseEntity.notFound().build();
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("products/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
-        try {
-            return productService.deleteProduct(id)
-                    ? ResponseEntity.ok("Product deleted")
-                    : ResponseEntity.status(HttpStatus.NOT_FOUND).body("Product not found");
-        } catch (IllegalStateException e) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal server error");
-        }
+        productService.disableProduct(id);
+        return ResponseEntity.ok("Product disabled successfully");
     }
 }

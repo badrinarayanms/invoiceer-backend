@@ -18,6 +18,29 @@ public class Product {
 
     private double price;
 
+    private boolean active = true;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
+
+    public User getOwner() {
+        return owner;
+    }
+
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
+
     public Long getId() {
         return id;
     }
@@ -41,4 +64,5 @@ public class Product {
     public void setPrice(double price) {
         this.price = price;
     }
+
 }

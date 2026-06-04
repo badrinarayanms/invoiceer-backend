@@ -1,0 +1,15 @@
+{
+  "projectType": "Java",
+  "services": [
+    "postgres"
+  ],
+  "env": {
+    "DATABASE_URL": "postgresql://devuser:devpassword@postgres:5432/devdb",
+    "DB_HOST": "postgres",
+    "DB_USER": "devuser",
+    "DB_PASSWORD": "devpassword",
+    "DB_NAME": "devdb",
+    "REDIS_URL": "",
+    "MONGODB_URI": ""
+  }
+}

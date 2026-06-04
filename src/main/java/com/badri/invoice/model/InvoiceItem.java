@@ -29,6 +29,7 @@ public class InvoiceItem {
     @Column(name = "price_at_time")
     private double priceAtTime;
 
+
     public Long getId() {
         return id;
     }

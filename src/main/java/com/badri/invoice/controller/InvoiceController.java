@@ -32,7 +32,7 @@ public class InvoiceController {
     @PostMapping("/invoice")
     public ResponseEntity<String> createInvoice(@RequestBody Invoice invoice) {
         for (InvoiceItem item : invoice.getItems()) {
-            item.setId(null); // ✅ Reset to ensure it's treated as a new row
+            item.setId(null);
             item.setInvoice(invoice);
             item.setPriceAtTime(item.getProduct().getPrice());
         }
@@ -45,5 +45,13 @@ public class InvoiceController {
                     .body("Failed to create invoice: " + e.getMessage());
         }
     }
+
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public class InvoiceNotFoundException extends RuntimeException {
+        public InvoiceNotFoundException(Long id) {
+            super("Invoice not found with id: " + id);
+        }
+    }
+
 
 }
