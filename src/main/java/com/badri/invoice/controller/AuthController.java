@@ -59,12 +59,15 @@ public class AuthController {
         // 🔐 AUTO LOGIN
         String token = jwtUtil.generateToken(user.getEmail());
 
-        Cookie cookie = new Cookie("JWT", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
+        ResponseCookie cookie = ResponseCookie.from("JWT", token)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .build();
 
-        response.addCookie(cookie);
+        response.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.ok("Signup & login successful :  "+cookie);
     }
@@ -91,12 +94,15 @@ public class AuthController {
         String token =
                 jwtUtil.generateToken(user.getEmail());
 
-        Cookie cookie = new Cookie("JWT", token);
-        cookie.setHttpOnly(true);
-        cookie.setPath("/");
-        cookie.setMaxAge(24 * 60 * 60);
+        ResponseCookie cookie = ResponseCookie.from("JWT", token)
+                .httpOnly(true)
+                .secure(true)
+                .sameSite("None")
+                .path("/")
+                .maxAge(24 * 60 * 60)
+                .build();
 
-        response.addCookie(cookie);
+        response.setHeader("Set-Cookie", cookie.toString());
 
         return ResponseEntity.ok("Login successful");
     }
@@ -106,10 +112,10 @@ public class AuthController {
 
         ResponseCookie cookie = ResponseCookie.from("JWT", "")
                 .httpOnly(true)
-                .secure(false)          // true in prod (https)
-                .sameSite("Lax")
+                .secure(true)
+                .sameSite("None")
                 .path("/")
-                .maxAge(0)              // 🔥 delete
+                .maxAge(0)
                 .build();
 
         response.setHeader("Set-Cookie", cookie.toString());
